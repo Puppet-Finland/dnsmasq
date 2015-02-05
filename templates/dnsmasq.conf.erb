@@ -1,0 +1,113 @@
+# Configuration file for dnsmasq.
+#
+# Format is one option per line, legal options are the same
+# as the long options legal on the command line. See
+# "/usr/sbin/dnsmasq --help" or "man 8 dnsmasq" for details.
+
+# The following two options make you a better netizen, since they
+# tell dnsmasq to filter out queries which the public DNS cannot
+# answer, and which load the servers (especially the root servers)
+# uneccessarily. If you have a dial-on-demand link they also stop
+# these requests from bringing up the link uneccessarily.
+
+# Never forward plain names (without a dot or domain part)
+domain-needed
+# Never forward addresses in the non-routed address spaces.
+bogus-priv
+
+# If you want dnsmasq to listen for DHCP and DNS requests only on
+# specified interfaces (and the loopback) give the name of the
+# interface (eg eth0) here.
+# Repeat the line for more than one interface.
+interface=<%= listen_interface %>
+# Or you can specify which interface _not_ to listen on
+#except-interface=eth1
+# Or which to listen on by address (remember to include 127.0.0.1 if
+# you use this.)
+#listen-address=
+
+# On systems which support it, dnsmasq binds the wildcard address,
+# even when it is listening on only some interfaces. It then discards
+# requests that it shouldn't reply to. This has the advantage of
+# working even when interfaces come and go and change address. If you
+# want dnsmasq to really bind only the interfaces it is listening on,
+# uncomment this option. About the only time you may need this is when
+# running another nameserver on the same machine.
+bind-interfaces
+
+# We want a domain
+expand-hosts
+domain=<%= lan_domain %>
+
+# We want to avoid sending <%= lan_domain %> queries upstream (as happens without this entry), see
+#
+# man 8 dnsmasq
+# http://www.thekelleys.org.uk/dnsmasq/docs/setup.html
+local=/<%= lan_domain %>/
+
+<% if has_variable?("servers") then %>
+<% servers.each do |val| -%>
+server=<%= val %>
+<% end -%>
+<% end %>
+
+<% if has_variable?("no_resolv_line") then %>
+<%= no_resolv_line %>
+<% end %>
+
+# Unknown visitors get an IP from this range
+dhcp-range=<%= lan_dhcp_range_start %>, <%= lan_dhcp_range_end %>, <%= netmask %>, 3h
+
+# Known visitors, define in the node definition like this:
+#
+# $dhcp_hosts = [ "54:52:00:72:2a:32",hosta,192.168.77.1",
+#                 "54:52:00:84:ea:02",hostb,192.168.77.2",
+#                 ]
+
+<% if has_variable?("hosts") then %>
+<% hosts.each do |val| -%>
+dhcp-host=<%= val %>,24h
+<% end -%>
+<% end %>
+
+# Send options to hosts which ask for a DHCP lease.
+# See RFC 2132 for details of available options:
+#
+# http://tools.ietf.org/html/rfc2132
+#
+# Not probably required, as sane values are given by
+# default
+
+# Subnet mask
+dhcp-option=1,<%= netmask %>
+# Default router
+dhcp-option=3,<%= ipv4_address %>
+# DNS server
+dhcp-option=6,<%= ipv4_address %>
+# Domain name
+dhcp-option=15,<%= lan_domain %>
+# Broadcast address
+dhcp-option=28,<%= lan_broadcast %>
+
+# Set the NTP time server address to be the same machine as
+# is running dnsmasq
+dhcp-option=42,0.0.0.0
+
+# Set the limit on DHCP leases, the default is 150
+dhcp-lease-max=50
+
+# Set the DHCP server to authoritative mode. In this mode it will barge in
+# and take over the lease for any client which broadcasts on the network,
+# whether it has a record of the lease or not. This avoids long timeouts
+# when a machine wakes up on a new network. DO NOT enable this if there's
+# the slighest chance that you might end up accidentally configuring a DHCP
+# server for your campus/company accidentally. The ISC server uses the same
+# the same option, and this URL provides more information:
+# http://www.isc.org/index.pl?/sw/dhcp/authoritative.php
+dhcp-authoritative
+
+log-queries
+
+
+# We want MX records for this domain
+mx-host=<%= lan_domain %>,<%= mail_server %>,50
