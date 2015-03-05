@@ -29,6 +29,11 @@
 #   An array of dhcp-host entries in the dnsmasq.conf format. For example
 #   [ '00:17:F2:3D:41:31,alice,10.94.99.2',
 #     '54:52:00:2A:2E:8b,joe,10.94.99.3' ]
+# [*default_router*]
+#   The IP address of the default router to announce to DHCP clients.
+# [*dns_server*]
+#   The DNS server to announce to DHCP clients. Typically the IP address of the 
+#   dnsmasq server.
 # [*upstream_dns_servers*]
 #   An array of upstream server definitions in dnsmasq.conf format. For example
 #   ['1.2.3.4', '/google.com/2.3.4.5'].
@@ -53,6 +58,8 @@ class dnsmasq
     $mail_server,
     $ignore_resolvconf = 'yes',
     $dhcp_hosts = '',
+    $default_router,
+    $dns_server,
     $upstream_dns_servers = '',
     $monitor_email = $::servermonitor
 )
@@ -67,6 +74,8 @@ class dnsmasq
         lan_dhcp_range_end => $lan_dhcp_range_end,
         mail_server => $mail_server,
         dhcp_hosts => $dhcp_hosts,
+        default_router => $default_router,
+        dns_server => $dns_server,
         ignore_resolvconf => $ignore_resolvconf,
         upstream_dns_servers => $upstream_dns_servers,
     }

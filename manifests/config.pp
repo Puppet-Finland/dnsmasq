@@ -13,15 +13,12 @@ class dnsmasq::config
     $mail_server,
     $ignore_resolvconf,
     $dhcp_hosts,
+    $default_router,
+    $dns_server,
     $upstream_dns_servers
 
 ) inherits dnsmasq::params
 {
-    # Get this node's IP based on DNS query done on the puppetmaster. The 
-    # ipaddress fact is worthless on nodes with several active interfaces. 
-    # Google "puppet facter ipaddress" for details.
-    $ipv4_address = generate("/usr/local/bin/getip.sh", "-4", "$fqdn")
-
     # We can't use the $dhcp_hosts and $upstream_dns_servers variables as is, or 
     # the logic in the ERB template breaks.
     unless $dhcp_hosts == '' {

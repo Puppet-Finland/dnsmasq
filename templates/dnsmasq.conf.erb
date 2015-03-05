@@ -81,9 +81,9 @@ dhcp-host=<%= val %>,24h
 # Subnet mask
 dhcp-option=1,<%= netmask %>
 # Default router
-dhcp-option=3,<%= ipv4_address %>
+dhcp-option=3,<%= default_router %>
 # DNS server
-dhcp-option=6,<%= ipv4_address %>
+dhcp-option=6,<%= dns_server %>
 # Domain name
 dhcp-option=15,<%= lan_domain %>
 # Broadcast address
