@@ -37,6 +37,10 @@
 # [*upstream_dns_servers*]
 #   An array of upstream server definitions in dnsmasq.conf format. For example
 #   ['1.2.3.4', '/google.com/2.3.4.5'].
+# [*dns_allow_address_ipv4*]
+#   An IPv4 address/subnet from which to allow connections. Defaults to '127.0.0.1'.
+# [*dns_allow_address_ipv6*]
+#   An IPv6 address/subnet from which to allow connections. Defaults to '::1'.
 # [*monitor_email*]
 #   Server monitoring email. Defaults to $::servermonitor.
 #
@@ -61,6 +65,8 @@ class dnsmasq
     $default_router,
     $dns_server,
     $upstream_dns_servers = '',
+    $dns_allow_ipv4_address = '127.0.0.1',
+    $dns_allow_ipv6_address = '::1',
     $monitor_email = $::servermonitor
 )
 {
@@ -81,6 +87,13 @@ class dnsmasq
     }
 
     include dnsmasq::service
+
+    if tagged('packetfilter') {
+        class { 'dns::packetfilter':
+            allow_address_ipv4 => $dns_allow_address_ipv4,
+            allow_address_ipv6 => $dns_allow_address_ipv6,
+        }
+    }
 
     if tagged('monit') {
         class { 'dnsmasq::monit':
