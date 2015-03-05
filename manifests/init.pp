@@ -7,7 +7,8 @@
 #
 # [*listen_interface*]
 #   Network interface to listen on. Currently only one interface is supported, 
-#   even though dnsmasq could manage several.
+#   even though dnsmasq could manage several. Use special value 'any' to listen 
+#   to all interfaces.
 # [*lan_domain*]
 #   Domain name for the LAN. Defaults to 'local'.
 # [*lan_broadcast*]

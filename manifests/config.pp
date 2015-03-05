@@ -19,6 +19,12 @@ class dnsmasq::config
 
 ) inherits dnsmasq::params
 {
+    if $listen_interface == 'any' {
+        $interface_line = ''
+    } else {
+        $interface_line = "interface=${listen_interface}"
+    }
+
     # We can't use the $dhcp_hosts and $upstream_dns_servers variables as is, or 
     # the logic in the ERB template breaks.
     unless $dhcp_hosts == '' {
