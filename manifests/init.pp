@@ -42,6 +42,10 @@
 #   An IPv4 address/subnet from which to allow connections. Defaults to '127.0.0.1'.
 # [*dns_allow_address_ipv6*]
 #   An IPv6 address/subnet from which to allow connections. Defaults to '::1'.
+# [*dhcp_allow_iface*]
+#   Allow inbound DHCP requests throuh the firewall from the specified network 
+#   interface. Use special value 'any' to allow DHCP requests from any 
+#   interface. Defaults to the value of $listen_interface. 
 # [*monitor_email*]
 #   Server monitoring email. Defaults to $::servermonitor.
 #
@@ -68,6 +72,7 @@ class dnsmasq
     $upstream_dns_servers = '',
     $dns_allow_ipv4_address = '127.0.0.1',
     $dns_allow_ipv6_address = '::1',
+    $dhcp_allow_iface = '',
     $monitor_email = $::servermonitor
 )
 {
@@ -90,6 +95,13 @@ class dnsmasq
     include dnsmasq::service
 
     if tagged('packetfilter') {
+
+        class { 'dhcp::packetfilter':
+            iniface => $dhcp_allow_iface ? {
+                '' => $listen_interface,
+                default => $dhcp_allow_iface,
+            },
+        }
         class { 'dns::packetfilter':
             allow_address_ipv4 => $dns_allow_address_ipv4,
             allow_address_ipv6 => $dns_allow_address_ipv6,
