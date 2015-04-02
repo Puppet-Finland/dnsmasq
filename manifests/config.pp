@@ -5,7 +5,7 @@
 #
 class dnsmasq::config
 (
-    $listen_interface,
+    $listen_interfaces,
     $lan_domain,
     $lan_broadcast,
     $lan_dhcp_range_start,
@@ -19,10 +19,12 @@ class dnsmasq::config
 
 ) inherits dnsmasq::params
 {
-    if $listen_interface == 'any' {
-        $interface_line = ''
-    } else {
-        $interface_line = "interface=${listen_interface}"
+
+    # Define which interfaces to listen on
+    $interfaces = $listen_interfaces ? {
+        'local' => [''],
+        'any' => ['*'],
+        default => $listen_interfaces,
     }
 
     # We can't use the $dhcp_hosts and $upstream_dns_servers variables as is, or 

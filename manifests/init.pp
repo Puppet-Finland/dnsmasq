@@ -5,10 +5,11 @@
 #
 # == Parameters
 #
-# [*listen_interface*]
-#   Network interface to listen on. Currently only one interface is supported, 
-#   even though dnsmasq could manage several. Use special value 'any' to listen 
-#   to all interfaces.
+# [*listen_interfaces*]
+#   An array of network interfaces to listen on. Valid values 'local' (default, 
+#   listen on localhost addresses only), 'any' (listen on all interfaces) and 
+#   any array of valid interface names. Note that if 'any' is defined, DNS 
+#   requests may still get blocked by the --local-service option in dnsmasq.
 # [*lan_domain*]
 #   Domain name for the LAN. Defaults to 'local'.
 # [*lan_broadcast*]
@@ -59,7 +60,7 @@
 #
 class dnsmasq
 (
-    $listen_interface,
+    $listen_interfaces = 'local',
     $lan_domain = 'local',
     $lan_broadcast,
     $lan_dhcp_range_start,
@@ -79,7 +80,7 @@ class dnsmasq
     include dnsmasq::install
 
     class { 'dnsmasq::config':
-        listen_interface => $listen_interface,
+        listen_interfaces => $listen_interfaces,
         lan_domain => $lan_domain,
         lan_broadcast => $lan_broadcast,
         lan_dhcp_range_start => $lan_dhcp_range_start,
