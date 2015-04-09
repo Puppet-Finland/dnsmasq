@@ -10,6 +10,7 @@
     { "name": "puppetfinland/dhcp", "version_requirement": ">= 0.2.0" },
     { "name": "puppetfinland/dns", "version_requirement": ">= 0.2.0" },
     { "name": "puppetfinland/monit", "version_requirement": ">= 0.5.0" },
-    { "name": "puppetfinland/os", "version_requirement": ">= 0.5.4" }
+    { "name": "puppetfinland/os", "version_requirement": ">= 0.5.5" },
+    { "name": "puppetfinland/systemd", "version_requirement": ">= 0.1.0" }
   ]
 }

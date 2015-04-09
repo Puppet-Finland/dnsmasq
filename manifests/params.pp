@@ -13,11 +13,17 @@ class dnsmasq::params {
             $config_name = '/etc/dnsmasq.conf'
             $service_name = 'dnsmasq'
             $pidfile = '/var/run/dnsmasq/dnsmasq.pid'
-            $service_start = "/usr/sbin/service $service_name start"
-            $service_stop = "/usr/sbin/service $service_name stop"
         }
         default: {
             fail("Unsupported OS: ${::osfamily}")
         }
+    }
+
+    if $::has_systemd == 'true' {
+        $service_start = "${::os::params::systemctl} start ${service_name}"
+        $service_stop = "${::os::params::systemctl} stop ${service_name}"
+    } else {
+        $service_start = "${::os::params::service_cmd} ${service_name} start"
+        $service_stop = "${::os::params::service_cmd} ${service_name} stop"
     }
 }
