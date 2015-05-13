@@ -1,6 +1,6 @@
 {
   "name": "puppetfinland-dnsmasq",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "author": "Puppet-Finland team",
   "license": "BSD license",
   "summary": "Setup dnsmasq",
@@ -11,6 +11,7 @@
     { "name": "puppetfinland/dns", "version_requirement": ">= 0.2.0" },
     { "name": "puppetfinland/monit", "version_requirement": ">= 0.5.0" },
     { "name": "puppetfinland/os", "version_requirement": ">= 0.5.5" },
-    { "name": "puppetfinland/systemd", "version_requirement": ">= 0.1.0" }
+    { "name": "puppetfinland/systemd", "version_requirement": ">= 0.1.0" },
+    { "name": "puppetlabs/stdlib", "version_requirement": ">= 4.0.0" }
   ]
 }

@@ -6,8 +6,8 @@
 class dnsmasq::service inherits dnsmasq::params {
 
     service { 'dnsmasq-dnsmasq':
-        name => $::dnsmasq::params::service_name,
-        enable => true,
+        name    => $::dnsmasq::params::service_name,
+        enable  => true,
         require => Class['dnsmasq::config'],
     }
 }

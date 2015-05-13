@@ -1,3 +1,8 @@
+#
+# == Class: dnsmasq::monit
+#
+# Configure monit rules for dnsmasq
+#
 class dnsmasq::monit
 (
     $monitor_email

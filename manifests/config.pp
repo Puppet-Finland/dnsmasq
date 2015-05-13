@@ -29,10 +29,10 @@ class dnsmasq::config
 
     # We can't use the $dhcp_hosts and $upstream_dns_servers variables as is, or 
     # the logic in the ERB template breaks.
-    unless $dhcp_hosts == '' {
+    if $dhcp_hosts {
         $hosts = $dhcp_hosts
     }
-    unless $upstream_dns_servers == '' {
+    if $upstream_dns_servers {
         $servers = $upstream_dns_servers
     }
 
@@ -41,12 +41,12 @@ class dnsmasq::config
     }
 
     file { 'dnsmasq-dnsmasq.conf':
-        name => $::dnsmasq::params::config_name,
+        ensure  => present,
+        name    => $::dnsmasq::params::config_name,
         content => template('dnsmasq/dnsmasq.conf.erb'),
-        ensure => present,
-        owner => $::os::params::adminuser,
-        group => $::os::params::admingroup,
+        owner   => $::os::params::adminuser,
+        group   => $::os::params::admingroup,
         require => Class['dnsmasq::install'],
-        notify => Class['dnsmasq::service'],
+        notify  => Class['dnsmasq::service'],
     }
 }

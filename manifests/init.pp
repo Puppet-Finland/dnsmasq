@@ -46,7 +46,7 @@
 # [*dhcp_allow_iface*]
 #   Allow inbound DHCP requests throuh the firewall from the specified network 
 #   interface. Use special value 'any' to allow DHCP requests from any 
-#   interface. Defaults to the value of $listen_interface. 
+#   interface. Defaults to the value of $listen_interfaces. 
 # [*monitor_email*]
 #   Server monitoring email. Defaults to $::servermonitor.
 #
@@ -67,50 +67,53 @@ class dnsmasq
     $lan_dhcp_range_end,
     $mail_server,
     $ignore_resolvconf = 'yes',
-    $dhcp_hosts = '',
+    $dhcp_hosts = undef,
     $default_router,
     $dns_server,
-    $upstream_dns_servers = '',
-    $dns_allow_ipv4_address = '127.0.0.1',
-    $dns_allow_ipv6_address = '::1',
-    $dhcp_allow_iface = '',
+    $upstream_dns_servers = undef,
+    $dns_allow_address_ipv4 = '127.0.0.1',
+    $dns_allow_address_ipv6 = '::1',
+    $dhcp_allow_iface = undef,
     $monitor_email = $::servermonitor
 )
 {
-    include dnsmasq::install
+    include ::dnsmasq::install
 
-    class { 'dnsmasq::config':
-        listen_interfaces => $listen_interfaces,
-        lan_domain => $lan_domain,
-        lan_broadcast => $lan_broadcast,
+    class { '::dnsmasq::config':
+        listen_interfaces    => $listen_interfaces,
+        lan_domain           => $lan_domain,
+        lan_broadcast        => $lan_broadcast,
         lan_dhcp_range_start => $lan_dhcp_range_start,
-        lan_dhcp_range_end => $lan_dhcp_range_end,
-        mail_server => $mail_server,
-        dhcp_hosts => $dhcp_hosts,
-        default_router => $default_router,
-        dns_server => $dns_server,
-        ignore_resolvconf => $ignore_resolvconf,
+        lan_dhcp_range_end   => $lan_dhcp_range_end,
+        mail_server          => $mail_server,
+        dhcp_hosts           => $dhcp_hosts,
+        default_router       => $default_router,
+        dns_server           => $dns_server,
+        ignore_resolvconf    => $ignore_resolvconf,
         upstream_dns_servers => $upstream_dns_servers,
     }
 
-    include dnsmasq::service
+    include ::dnsmasq::service
 
     if tagged('packetfilter') {
 
-        class { 'dhcp::packetfilter':
-            iniface => $dhcp_allow_iface ? {
-                '' => $listen_interface,
-                default => $dhcp_allow_iface,
-            },
+        $dhcp_iniface = $dhcp_allow_iface ? {
+            undef   => $listen_interfaces,
+            default => $dhcp_allow_iface,
         }
-        class { 'dns::packetfilter':
+
+        class { '::dhcp::packetfilter':
+            iniface => $dhcp_iniface,
+        }
+
+        class { '::dns::packetfilter':
             allow_address_ipv4 => $dns_allow_address_ipv4,
             allow_address_ipv6 => $dns_allow_address_ipv6,
         }
     }
 
     if tagged('monit') {
-        class { 'dnsmasq::monit':
+        class { '::dnsmasq::monit':
             monitor_email => $monitor_email,
         }
     }
