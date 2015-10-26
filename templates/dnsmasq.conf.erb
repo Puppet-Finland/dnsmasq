@@ -19,7 +19,7 @@ bogus-priv
 # specified interfaces (and the loopback) give the name of the
 # interface (eg eth0) here.
 # Repeat the line for more than one interface.
-<% interfaces.each do |val| -%>
+<% @interfaces.each do |val| -%>
 interface=<%= val %>
 <% end -%>
 # Or you can specify which interface _not_ to listen on
@@ -39,26 +39,26 @@ bind-interfaces
 
 # We want a domain
 expand-hosts
-domain=<%= lan_domain %>
+domain=<%= @lan_domain %>
 
-# We want to avoid sending <%= lan_domain %> queries upstream (as happens without this entry), see
+# We want to avoid sending <%= @lan_domain %> queries upstream (as happens without this entry), see
 #
 # man 8 dnsmasq
 # http://www.thekelleys.org.uk/dnsmasq/docs/setup.html
-local=/<%= lan_domain %>/
+local=/<%= @lan_domain %>/
 
 <% if has_variable?("servers") then %>
-<% servers.each do |val| -%>
+<% @servers.each do |val| -%>
 server=<%= val %>
 <% end -%>
 <% end %>
 
 <% if has_variable?("no_resolv_line") then %>
-<%= no_resolv_line %>
+<%= @no_resolv_line %>
 <% end %>
 
 # Unknown visitors get an IP from this range
-dhcp-range=<%= lan_dhcp_range_start %>, <%= lan_dhcp_range_end %>, <%= netmask %>, 3h
+dhcp-range=<%= @lan_dhcp_range_start %>, <%= @lan_dhcp_range_end %>, <%= @netmask %>, 3h
 
 # Known visitors, define in the node definition like this:
 #
@@ -67,7 +67,7 @@ dhcp-range=<%= lan_dhcp_range_start %>, <%= lan_dhcp_range_end %>, <%= netmask %
 #                 ]
 
 <% if has_variable?("hosts") then %>
-<% hosts.each do |val| -%>
+<% @hosts.each do |val| -%>
 dhcp-host=<%= val %>,24h
 <% end -%>
 <% end %>
@@ -81,15 +81,15 @@ dhcp-host=<%= val %>,24h
 # default
 
 # Subnet mask
-dhcp-option=1,<%= netmask %>
+dhcp-option=1,<%= @netmask %>
 # Default router
-dhcp-option=3,<%= default_router %>
+dhcp-option=3,<%= @default_router %>
 # DNS server
-dhcp-option=6,<%= dns_server %>
+dhcp-option=6,<%= @dns_server %>
 # Domain name
-dhcp-option=15,<%= lan_domain %>
+dhcp-option=15,<%= @lan_domain %>
 # Broadcast address
-dhcp-option=28,<%= lan_broadcast %>
+dhcp-option=28,<%= @lan_broadcast %>
 
 # Set the NTP time server address to be the same machine as
 # is running dnsmasq
@@ -112,4 +112,4 @@ log-queries
 
 
 # We want MX records for this domain
-mx-host=<%= lan_domain %>,<%= mail_server %>,50
+mx-host=<%= @lan_domain %>,<%= @mail_server %>,50
