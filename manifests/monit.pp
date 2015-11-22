@@ -10,6 +10,7 @@ class dnsmasq::monit
 ) inherits dnsmasq::params
 {
     monit::fragment { 'dnsmasq-dnsmasq.monit':
+        basename   => 'dnsmasq',
         modulename => 'dnsmasq',
     }
 }
