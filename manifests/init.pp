@@ -47,6 +47,9 @@
 #   Allow inbound DHCP requests throuh the firewall from the specified network 
 #   interface. Use special value 'any' to allow DHCP requests from any 
 #   interface. Defaults to the value of $listen_interfaces. 
+# [*hosts*]
+#   A hash "host" resources to materialize. This allows dnsmasq to resolve hosts 
+#   that have static IPs.
 # [*monitor_email*]
 #   Server monitoring email. Defaults to $::servermonitor.
 #
@@ -74,6 +77,7 @@ class dnsmasq
     $dns_allow_address_ipv4 = '127.0.0.1',
     $dns_allow_address_ipv6 = '::1',
     $dhcp_allow_iface = undef,
+    $hosts = {},
     $monitor_email = $::servermonitor
 )
 {
@@ -94,6 +98,8 @@ class dnsmasq
     }
 
     include ::dnsmasq::service
+
+    create_resources('host', $hosts)
 
     if tagged('packetfilter') {
 

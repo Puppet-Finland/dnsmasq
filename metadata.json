@@ -1,6 +1,6 @@
 {
   "name": "puppetfinland-dnsmasq",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "author": "Puppet-Finland team",
   "license": "BSD license",
   "summary": "Setup dnsmasq",
