@@ -5,6 +5,12 @@
 #
 # == Parameters
 #
+# [*manage*]
+#   Manage dnsmasq with Puppet. Valid values are true (default) and false.
+# [*manage_packetfilter*]
+#   Manage packet filtering rules. Valid values are true (default) and false.
+# [*manage_monit*]
+#   Manage monit rules. Valid values are true (default) and false.
 # [*listen_interfaces*]
 #   An array of network interfaces to listen on. Valid values 'local' (default, 
 #   listen on localhost addresses only), 'any' (listen on all interfaces) and 
@@ -63,6 +69,9 @@
 #
 class dnsmasq
 (
+    $manage = true,
+    $manage_packetfilter = true,
+    $manage_monit = true,
     $listen_interfaces = 'local',
     $lan_domain = 'local',
     $lan_broadcast,
@@ -81,6 +90,8 @@ class dnsmasq
     $monitor_email = $::servermonitor
 )
 {
+    if $manage {
+
     include ::dnsmasq::install
 
     class { '::dnsmasq::config':
@@ -101,7 +112,7 @@ class dnsmasq
 
     create_resources('host', $hosts)
 
-    if tagged('packetfilter') {
+    if $manage_packetfilter {
 
         $dhcp_iniface = $dhcp_allow_iface ? {
             undef   => $listen_interfaces,
@@ -118,9 +129,10 @@ class dnsmasq
         }
     }
 
-    if tagged('monit') {
+    if $manage_monit {
         class { '::dnsmasq::monit':
             monitor_email => $monitor_email,
         }
+    }
     }
 }
