@@ -69,25 +69,25 @@
 #
 class dnsmasq
 (
-    $manage = true,
-    $manage_packetfilter = true,
-    $manage_monit = true,
-    $listen_interfaces = 'local',
-    $lan_domain = 'local',
-    $lan_broadcast,
-    $lan_dhcp_range_start,
-    $lan_dhcp_range_end,
-    $mail_server,
-    $ignore_resolvconf = 'yes',
-    $dhcp_hosts = undef,
-    $default_router,
-    $dns_server,
-    $upstream_dns_servers = undef,
-    $dns_allow_address_ipv4 = '127.0.0.1',
-    $dns_allow_address_ipv6 = '::1',
-    $dhcp_allow_iface = undef,
-    $hosts = {},
-    $monitor_email = $::servermonitor
+    Boolean                       $manage = true,
+    Boolean                       $manage_packetfilter = true,
+    Boolean                       $manage_monit = true,
+    Variant[String,Array[String]] $listen_interfaces = 'local',
+    String                        $lan_domain = 'local',
+    String                        $lan_broadcast,
+    String                        $lan_dhcp_range_start,
+    String                        $lan_dhcp_range_end,
+    String                        $mail_server,
+    Enum['yes','no']              $ignore_resolvconf = 'yes',
+    Optional[Array[String]]       $dhcp_hosts = undef,
+    String                        $default_router,
+    String                        $dns_server,
+    Optional[Array[String]]       $upstream_dns_servers = undef,
+    String                        $dns_allow_address_ipv4 = '127.0.0.1',
+    String                        $dns_allow_address_ipv6 = '::1',
+    Optional[String]              $dhcp_allow_iface = undef,
+    Hash                          $hosts = {},
+    String                        $monitor_email = $::servermonitor
 )
 {
     if $manage {
