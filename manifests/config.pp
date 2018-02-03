@@ -10,6 +10,7 @@ class dnsmasq::config
     $lan_broadcast,
     $lan_dhcp_range_start,
     $lan_dhcp_range_end,
+    $auth_zones,
     $mail_server,
     $ignore_resolvconf,
     $dhcp_hosts,
@@ -19,6 +20,9 @@ class dnsmasq::config
 
 ) inherits dnsmasq::params
 {
+
+    # Ensure that auth_zones is an array when it gets to the template
+    $auth_zone_list = any2array($auth_zones)
 
     # Define which interfaces to listen on
     $interfaces = $listen_interfaces ? {

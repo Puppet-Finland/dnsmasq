@@ -26,6 +26,11 @@
 #   dhcp-hosts parameter.
 # [*lan_dhcp_range_end*]
 #   Last IP address in the DHCP address range.
+# [*auth_zones*]
+#   Define additional DNS zone for which dnsmasq acts as authoritative server. 
+#   This is useful, for example, when serving A records pointing to subnets that 
+#   are not in dnsmasq's DHCP range. See auth-zone option for dnsmasq. String or 
+#   an array of strings. Example: 'example.org,10.152.4.0/24'.
 # [*mail_server*]
 #   Hostname of the LAN's SMTP server. For example 'smtp.domain.com'.
 # [*ignore_resolvconf*]
@@ -77,6 +82,7 @@ class dnsmasq
     String                        $lan_broadcast,
     String                        $lan_dhcp_range_start,
     String                        $lan_dhcp_range_end,
+    Variant[String,Array[String]] $auth_zones = [],
     String                        $mail_server,
     Enum['yes','no']              $ignore_resolvconf = 'yes',
     Optional[Array[String]]       $dhcp_hosts = undef,
@@ -100,6 +106,7 @@ class dnsmasq
         lan_broadcast        => $lan_broadcast,
         lan_dhcp_range_start => $lan_dhcp_range_start,
         lan_dhcp_range_end   => $lan_dhcp_range_end,
+        auth_zones           => $auth_zones,
         mail_server          => $mail_server,
         dhcp_hosts           => $dhcp_hosts,
         default_router       => $default_router,

@@ -40,6 +40,9 @@ bind-interfaces
 # We want a domain
 expand-hosts
 domain=<%= @lan_domain %>
+<% @auth_zone_list.each do |auth_zone| -%>
+auth-zone=<%= auth_zone %>
+<% end -%>
 
 # We want to avoid sending <%= @lan_domain %> queries upstream (as happens without this entry), see
 #
