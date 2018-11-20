@@ -16,6 +16,7 @@ class dnsmasq::config
     $dhcp_hosts,
     $default_router,
     $dns_server,
+    $localise_queries,
     $upstream_dns_servers
 
 ) inherits dnsmasq::params
@@ -42,6 +43,12 @@ class dnsmasq::config
 
     if $ignore_resolvconf == 'yes' {
         $no_resolv_line = 'no-resolv'
+    }
+
+    $localise_queries_line = $localise_queries ? {
+        true  => 'localise_queries',
+        false => '#localise_queries',
+        default => '#localise_queries',
     }
 
     file { 'dnsmasq-dnsmasq.conf':

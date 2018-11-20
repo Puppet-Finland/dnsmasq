@@ -38,6 +38,10 @@
 #   to use dnsmasq's DNS on the dnsmasq host itself. Valid values 'yes' 
 #   (default) and 'no'. Note that if this is set to 'yes', you need to have one 
 #   or more upstream servers defined in $upstream_dns_servers parameter.
+# [*localise_queries*]
+#   Return answers based on the interface they come from. See localise-queries
+#   in dnsmasq man-page for more information. Valid values are true and false
+#   (default).
 # [*dhcp_hosts*]
 #   An array of dhcp-host entries in the dnsmasq.conf format. For example
 #   [ '00:17:F2:3D:41:31,alice,10.94.99.2',
@@ -85,6 +89,7 @@ class dnsmasq
     Variant[String,Array[String]] $auth_zones = [],
     String                        $mail_server,
     Enum['yes','no']              $ignore_resolvconf = 'yes',
+    Boolean                       $localise_queries = false,
     Optional[Array[String]]       $dhcp_hosts = undef,
     String                        $default_router,
     String                        $dns_server,
@@ -112,6 +117,7 @@ class dnsmasq
         default_router       => $default_router,
         dns_server           => $dns_server,
         ignore_resolvconf    => $ignore_resolvconf,
+        localise_queries     => $localise_queries,
         upstream_dns_servers => $upstream_dns_servers,
     }
 
