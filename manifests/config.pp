@@ -46,9 +46,9 @@ class dnsmasq::config
     }
 
     $localise_queries_line = $localise_queries ? {
-        true  => 'localise_queries',
-        false => '#localise_queries',
-        default => '#localise_queries',
+        true  => 'localise-queries',
+        false => '#localise-queries',
+        default => '#localise-queries',
     }
 
     file { 'dnsmasq-dnsmasq.conf':
