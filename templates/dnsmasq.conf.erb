@@ -116,3 +116,6 @@ log-queries
 
 # We want MX records for this domain
 mx-host=<%= @lan_domain %>,<%= @mail_server %>,50
+
+# Include all files in a directory which end in .conf
+conf-dir=/etc/dnsmasq.d/,*.conf
